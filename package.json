@@ -1,0 +1,16 @@
+{
+  "name": "rmm",
+  "version": "1.0.0",
+  "description": "Reciple module manager",
+  "main": "index.js",
+  "repository": "https://github.com/FalloutStudios/rmm.git",
+  "author": "FalloutStudios",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "typescript": "^4.7.4"
+  },
+  "packageManager": "yarn@3.2.2",
+  "dependencies": {
+    "chalk": "^4.1.2"
+  }
+}
