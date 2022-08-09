@@ -13,10 +13,16 @@
     "build:publish": "yarn run build && yarn npm publish",
     "build:publish-prerelease": "yarn run build && yarn npm publish --tag pre"
   },
-  "packageManager": "yarn@3.2.2",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^9.4.0",
+    "semver": "^7.3.7",
+    "yaml": "^2.1.1"
+  },
   "devDependencies": {
     "@types/node": "^18.6.5",
     "rimraf": "^3.0.2",
     "typescript": "^4.7.4"
-  }
+  },
+  "packageManager": "yarn@3.2.2"
 }
