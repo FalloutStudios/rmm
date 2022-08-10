@@ -1,3 +1,5 @@
+import { IPackageJson, IRecipleYml, IRecipleModulesYml } from './files';
+
 export type Awaitable<T> = PromiseLike<T>|T;
 
 export interface UnloadedCommand {
@@ -8,4 +10,7 @@ export interface UnloadedCommand {
 export interface CommandFileParam {
     unloadedCommands: UnloadedCommand[];
     commandFiles: string[];
+    packageJson: IPackageJson;
+    recipleYml: IRecipleYml;
+    recipleModulesYml: IRecipleModulesYml;
 }

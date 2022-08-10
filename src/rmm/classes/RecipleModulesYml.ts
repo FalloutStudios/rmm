@@ -4,7 +4,7 @@ import { cwd } from '../util/cli';
 import path from 'path';
 import yml from 'yaml';
 
-export class RecipleYml extends BaseFileReader<IRecipleModulesYml> {
+export class RecipleModulesYml extends BaseFileReader<IRecipleModulesYml> {
     public filePath: string = path.join(cwd, 'reciple-modules.yml');
     public defaultData: string = this.getDefaultData();
 
