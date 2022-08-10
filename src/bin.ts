@@ -4,6 +4,7 @@ import { mkdirSync, readdirSync } from 'fs'
 import path from 'path';
 import chalk from 'chalk';
 import { version } from './rmm/util/version';
+import { unhandledError } from './rmm/util/error';
 
 mkdirSync(commandsDir, { recursive: true });
 
@@ -33,3 +34,6 @@ console.log(chalk.bold(`Reciple module manager v${version}`));
 
     program.parse();
 })();
+
+process.on('uncaughtException', (err: Error) => unhandledError(err));
+process.on('unhandledRejection', (err: Error) => unhandledError(err));

@@ -1,5 +1,5 @@
 import { BaseFileReader, BaseFileReaderOptions } from './base/BaseFileReader';
-import { IRecipleYml } from '../types/reciple.yml';
+import { IRecipleYml } from '../types/files';
 import { cwd } from '../util/cli';
 import path from 'path';
 

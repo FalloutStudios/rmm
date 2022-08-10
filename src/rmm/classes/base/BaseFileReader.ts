@@ -8,6 +8,7 @@ export interface BaseFileReaderOptions {
 
 export class BaseFileReader<T> {
     public filePath: string = cwd;
+    public defaultData: string = '';
     public data?: T;
 
     constructor(options?: BaseFileReaderOptions) {
@@ -22,12 +23,8 @@ export class BaseFileReader<T> {
 
     public save(data?: string): string {
         mkdirSync(path.dirname(this.filePath), { recursive: true });
-        writeFileSync(this.filePath, data ?? this.defaultData());
+        writeFileSync(this.filePath, data ?? this.defaultData);
 
         return this.read();
-    }
-
-    public defaultData(): string {
-        return '';
     }
 }

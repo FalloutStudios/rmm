@@ -10,4 +10,4 @@ export default (data: CommandFileParam) => program
             console.log(`${chalk.bold.red("Failed to load")}: ${unloadedCommand.file}`);
             console.log(`                ${chalk.gray(String(unloadedCommand.error?.stack).split('\n').join(`\n                `))}`);
         }
-    })
+    });
