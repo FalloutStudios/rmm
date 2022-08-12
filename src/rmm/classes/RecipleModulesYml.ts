@@ -7,9 +7,21 @@ import yml from 'yaml';
 export class RecipleModulesYml extends BaseFileReader<IRecipleModulesYml> {
     public filePath: string = path.join(cwd, 'reciple-modules.yml');
     public defaultData: string = this.getDefaultData();
+    public data: IRecipleModulesYml = { modules: [] };
 
     constructor(options?: BaseFileReaderOptions) {
         super(options);
+        this.fetch();
+    }
+
+    public fetch(): void {
+        this.data = yml.parse(this.read());
+    }
+
+    public add(...module: IRecipleModulesYml["modules"]): IRecipleModulesYml {
+        
+
+        return this.data;
     }
 
     public getDefaultData(): string {

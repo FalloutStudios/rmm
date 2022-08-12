@@ -1,3 +1,8 @@
+export interface IDotRecipleScripts {
+    installed?: string;
+    uninstalled?: string;
+}
+
 export interface IPackageJson {
     name?: string;
     displayName?: string;
@@ -21,6 +26,7 @@ export interface IDotReciple {
     files: string[];
     supportedRecipleVersions: string|string[];
     dependencies?: { [dependency: string]: string; };
+    scripts?: IDotRecipleScripts;
     description?: string;
     license?: string;
     author?: string;

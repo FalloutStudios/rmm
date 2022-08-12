@@ -1,6 +1,7 @@
 import { IPackageJson, IRecipleYml, IRecipleModulesYml } from './files';
 
 export type Awaitable<T> = PromiseLike<T>|T;
+export type RestOrArray<T> = T[]|[T[]];
 
 export interface UnloadedCommand {
     file: string;
