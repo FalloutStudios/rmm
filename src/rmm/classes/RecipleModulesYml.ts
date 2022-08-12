@@ -31,7 +31,7 @@ export class RecipleModulesYml extends BaseFileReader<IRecipleModulesYml> {
             this.data.modules.push(mod);
         }
 
-        this.save(yml.stringify(this.data));
+        this.update();
         return modules;
     }
 
@@ -49,10 +49,13 @@ export class RecipleModulesYml extends BaseFileReader<IRecipleModulesYml> {
         const removed = this.data.modules.filter(mod => names.some(name => name == mod.name));
         this.data.modules = this.data.modules.filter(mod => !removed.some(rmd => rmd.name == mod.name));
 
-        this.save(yml.stringify(this.data));
+        this.update();
         return removed;
     }
 
+    public update() {
+        this.save(yml.stringify(this.data));
+    }
 
     public getDefaultData(): string {
         const data: IRecipleModulesYml = {
