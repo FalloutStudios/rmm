@@ -35,3 +35,15 @@ export interface IDotReciple {
 export interface IRecipleModulesYml {
     modules: (IDotReciple & { repositoryURL: string; containingFolder: string; })[];
 }
+
+export interface IRegistry {
+    repositories: {
+        name: string;
+        url: string;
+        createdAt: number;
+    }[];
+}
+
+export interface IRepository {
+    [name: string]: string;
+}

@@ -9,6 +9,7 @@ import { unhandledError } from './rmm/util/error';
 import { PackageJson } from './rmm/classes/PackageJson';
 import { RecipleYml } from './rmm/classes/RecipleYml';
 import { RecipleModulesYml } from './rmm/classes/RecipleModulesYml';
+import { Registry } from './rmm/classes/Registry';
 
 mkdirSync(commandsDir, { recursive: true });
 
@@ -30,6 +31,7 @@ console.log(chalk.bold(`Reciple module manager v${version}`));
             await Promise.resolve(command({
                 unloadedCommands,
                 commandFiles,
+                registry: new Registry().data,
                 packageJson: recipleYml.packageJson,
                 recipleYml: recipleYml.recipleYml,
                 recipleModulesYml

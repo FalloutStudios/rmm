@@ -1,5 +1,5 @@
 import { BaseFileReader, BaseFileReaderOptions } from './base/BaseFileReader';
-import { IDotReciple, IRecipleModulesYml } from '../types/files';
+import { IDotReciple, IRecipleModulesYml, IRepository } from '../types/files';
 import { cwd } from '../util/cli';
 import path from 'path';
 import yml from 'yaml';
@@ -17,7 +17,7 @@ export class RecipleModulesYml extends BaseFileReader<IRecipleModulesYml> {
         super(options);
         this.fetch();
     }
-
+    
     public fetch(): void {
         this.data = yml.parse(this.read());
     }
