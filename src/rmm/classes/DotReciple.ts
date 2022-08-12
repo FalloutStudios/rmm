@@ -12,7 +12,7 @@ export class DotReciple extends BaseFileReader<IDotReciple> {
         super(options);
     }
 
-    public static validateDotReciple(data: IDotReciple): null {
+    public static validateDotReciple(data: any): null {
         if (!data.name) throw new TypeError("Module name is undefined");
         if (!data.name.match(/^[\w-]{1,32}$/)) throw new TypeError("Invalid module name");
         if (!data.supportedRecipleVersions.length) throw new Error("Module does not have supported versions");

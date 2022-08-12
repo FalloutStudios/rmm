@@ -1,8 +1,12 @@
 import { BaseFileReader, BaseFileReaderOptions } from './base/BaseFileReader';
-import { IRecipleModulesYml } from '../types/files';
+import { IDotReciple, IRecipleModulesYml } from '../types/files';
 import { cwd } from '../util/cli';
 import path from 'path';
 import yml from 'yaml';
+import { DotReciple } from './DotReciple';
+import { RestOrArray } from '../types/commands';
+import { normalizeArray } from '../util/converters';
+import chalk from 'chalk';
 
 export class RecipleModulesYml extends BaseFileReader<IRecipleModulesYml> {
     public filePath: string = path.join(cwd, 'reciple-modules.yml');
@@ -18,11 +22,37 @@ export class RecipleModulesYml extends BaseFileReader<IRecipleModulesYml> {
         this.data = yml.parse(this.read());
     }
 
-    public add(...module: IRecipleModulesYml["modules"]): IRecipleModulesYml {
-        
+    public add(module: IRecipleModulesYml["modules"][0]): IRecipleModulesYml["modules"];
+    public add(...modules: RestOrArray<IRecipleModulesYml["modules"][0]>): IRecipleModulesYml["modules"] {
+        modules = normalizeArray(modules);
+        modules.forEach(mod => DotReciple.validateDotReciple(mod));
 
-        return this.data;
+        for (const mod of modules) {
+            this.data.modules.push(mod);
+        }
+
+        this.save(yml.stringify(this.data));
+        return modules;
     }
+
+    public remove(name: string): IRecipleModulesYml["modules"];
+    public remove(module: IDotReciple): IRecipleModulesYml["modules"];
+    public remove(...names: RestOrArray<string>): IRecipleModulesYml["modules"];
+    public remove(...modules: RestOrArray<IDotReciple>): IRecipleModulesYml["modules"];
+    public remove(...modules: RestOrArray<IDotReciple|string>): IRecipleModulesYml["modules"] {
+        const names: string[] = normalizeArray(modules).map(m => typeof m !== 'string' ? m.name : m);
+
+        names.forEach(name => {
+            if (!this.data.modules.some(mod => mod.name == name)) throw new TypeError(`Cannot find installed module with name ${chalk.blue(name)}`);
+        });
+
+        const removed = this.data.modules.filter(mod => names.some(name => name == mod.name));
+        this.data.modules = this.data.modules.filter(mod => !removed.some(rmd => rmd.name == mod.name));
+
+        this.save(yml.stringify(this.data));
+        return removed;
+    }
+
 
     public getDefaultData(): string {
         const data: IRecipleModulesYml = {

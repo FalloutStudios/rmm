@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import path from 'path';
 import stripAnsi from 'strip-ansi';
-import { cwd, program } from './cli';
+import { cwd } from './cli';
 
 export function unhandledError (error: Error) {
     console.log('\n\n----------------------------\n' + chalk.bold.red(`      An Error occured`) + '\n----------------------------\n');
