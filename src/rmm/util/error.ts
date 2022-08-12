@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import path from 'path';
+import stripAnsi from 'strip-ansi';
 import { cwd, program } from './cli';
 
 export function unhandledError (error: Error) {
@@ -13,7 +14,7 @@ export function unhandledError (error: Error) {
 
     if (!data) mkdirSync(path.dirname(file), { recursive: true });
 
-    writeFileSync(file, (data + `\n\n\n${new Date()}:\n\n  Execute: ${process.argv.join(' ')}\n\n  Exec Args: ${process.execArgv.join(' ')}\n\n  ${(error.stack ?? '').split('\n').join('\n')}`).trim());
+    writeFileSync(file, (data + `\n\n\n${new Date()}:\n\n  Execute: ${process.argv.join(' ')}\n\n  Exec Args: ${process.execArgv.join(' ')}\n\n  ${(stripAnsi(error.stack ?? '')).split('\n').join('\n')}`).trim());
 
     process.exit(1);
 }

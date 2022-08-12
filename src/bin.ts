@@ -41,8 +41,6 @@ console.log(chalk.bold(`Reciple module manager v${version}`));
             });
         }
     }
-
-    program.parse();
 })();
 
 process.on('uncaughtException', (err: Error) => unhandledError(err));

@@ -1,6 +1,6 @@
 import { BaseFileReader, BaseFileReaderOptions } from './base/BaseFileReader';
 import { IPackageJson, IRecipleYml } from '../types/files';
-import { cwd } from '../util/cli';
+import { cwd, opts } from '../util/cli';
 import yml from 'yaml';
 import path from 'path';
 import chalk from 'chalk';
@@ -9,7 +9,7 @@ import { existsSync } from 'fs';
 import { PackageJson } from './PackageJson';
 
 export class RecipleYml extends BaseFileReader<IRecipleYml> {
-    public filePath: string = path.join(cwd, 'reciple.yml');
+    public filePath: string = opts.recipleYml ?? path.join(cwd, 'reciple.yml');
     public modulesFolder: string[];
     public version: string;
     public packageJson: IPackageJson;

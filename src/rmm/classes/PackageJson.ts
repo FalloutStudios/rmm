@@ -1,12 +1,12 @@
 import { BaseFileReader, BaseFileReaderOptions } from './base/BaseFileReader';
 import { IPackageJson } from '../types/files';
-import { cwd } from '../util/cli';
+import { cwd, opts } from '../util/cli';
 import path from 'path';
 import { existsSync } from 'fs';
 import chalk from 'chalk';
 
 export class PackageJson extends BaseFileReader<IPackageJson> {
-    public filePath: string = path.join(cwd, 'package.json');
+    public filePath: string = opts.packageJson ?? path.join(cwd, 'package.json');
 
     constructor(options?: BaseFileReaderOptions) {
         super(options);
