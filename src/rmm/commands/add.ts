@@ -1,11 +1,12 @@
 import chalk from 'chalk';
 import { Command } from 'commander';
+import { existsSync } from 'fs';
 import { FetchGitHub } from '../classes/FetchGitHub';
 import { RecipleModulesYml } from '../classes/RecipleModulesYml';
 import { Registry } from '../classes/Registry';
 import { CommandFileParam } from '../types/commands';
 import { program } from '../util/cli';
-import { resolveModuleQuery } from '../util/converters';
+import { resolveModuleQuery, toArray } from '../util/converters';
 import { createSpinner } from '../util/createSpinner';
 
 export default (data: CommandFileParam) => program
@@ -24,12 +25,29 @@ export default (data: CommandFileParam) => program
         registrySpinner.succeed("Fetched registry!");
         
         modulesSpinner.start();
-        const modules = await Promise.all(command.args.map(async query => {
+        modulesSpinner.info(`${command.args.join(', ')}`);
+        
+        const additional = (data.recipleModulesYml.modules ?? []).filter(m => !existsSync(m.containingFolder) || m.files.every(f => !existsSync(f))).map(m => m.repositoryURL);
+        const modules = await Promise.all([...toArray(command.args), ...toArray(additional)].map(async query => {
+            if (!query) return;
             const q = resolveModuleQuery(query);
-            modulesSpinner.text = `Resolving ${q.repository ? chalk.gray(q.repository) + chalk.dim(':') : ''}${chalk.blue(q.module) + chalk.dim('@') + chalk.green(q.tag)}...`;
+
+            if (q.type == 'github') {
+                const fetch = new FetchGitHub(`https://github.com/${q.owner}/${q.repository}/`, q.tag);
+
+                modulesSpinner.text = `Resolving ${chalk.dim('github:') + chalk.blue(q.owner + '/' + q.repository) + chalk.dim('@') + chalk.green(q.tag)}...`;
+                await fetch.fetch();
+
+                const asset = (await fetch.cacheAsset());
+
+                modulesSpinner.info(`Cached ${chalk.dim('github:') + chalk.blue(q.owner + '/' + q.repository) + chalk.dim('@') + chalk.green(q.tag)}: ${chalk.dim(asset)}`);
+                return asset;
+            }
             
+            modulesSpinner.text = `Resolving ${q.repository ? chalk.dim(q.repository) + chalk.dim(':') : ''}${chalk.blue(q.module) + chalk.dim('@') + chalk.green(q.tag)}...`;
+
             const asset = await (await FetchGitHub.fetch(q.module, q.repository, q.tag)).cacheAsset();
-            modulesSpinner.info(`Cached ${q.repository ? chalk.gray(q.repository) + chalk.dim(':') : ''}${chalk.blue(q.module) + chalk.dim('@') + chalk.green(q.tag)}: ${chalk.dim(asset)}`);
+            modulesSpinner.info(`Cached ${q.repository ? chalk.dim(q.repository) + chalk.dim(':') : ''}${chalk.blue(q.module) + chalk.dim('@') + chalk.green(q.tag)}: ${chalk.dim(asset)}`);
             return asset;
         }));
 

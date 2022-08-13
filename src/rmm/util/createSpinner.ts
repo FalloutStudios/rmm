@@ -3,5 +3,19 @@ import ora, { Ora } from 'ora';
 
 export function createSpinner(text: string): Ora {
     // dots11
-    return ora({ color: 'white', spinner: cliSpinners.dots11, text });
+    const spinner = ora({ color: 'white', spinner: cliSpinners.dots11, text });
+
+    process.once('exit', () => {
+        if (spinner.isSpinning) spinner.fail('Abborted');
+    });
+
+    process.once('SIGINT', () => {
+        if (spinner.isSpinning) spinner.fail('Abborted');
+    });
+
+    process.once('SIGTERM', () => {
+        if (spinner.isSpinning) spinner.fail('Abborted');
+    });
+
+    return spinner;
 }

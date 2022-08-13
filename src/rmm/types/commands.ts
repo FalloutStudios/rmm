@@ -20,8 +20,16 @@ export interface CommandFileParam {
     recipleModulesYml: IRecipleModulesYml;
 }
 
-export interface ModuleQuery {
+export interface StringModuleQuery {
+    type: 'string';
     repository?: string;
     module: string;
+    tag: version;
+}
+
+export interface GitHubModuleQuery {
+    type: 'github';
+    owner: string;
+    repository: string;
     tag: version;
 }

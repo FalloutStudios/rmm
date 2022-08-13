@@ -1,3 +1,5 @@
+import { version } from './commands';
+
 export interface IDotRecipleScripts {
     installed?: string;
     uninstalled?: string;
@@ -33,7 +35,7 @@ export interface IDotReciple {
 }
 
 export interface IRecipleModulesYml {
-    modules: (IDotReciple & { repositoryURL: string; containingFolder: string; })[];
+    modules: (IDotReciple & { repositoryURL: string; containingFolder: string; tag: version; })[];
 }
 
 export interface IRegistry {
