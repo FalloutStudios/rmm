@@ -1,4 +1,4 @@
-import { CommandFile, commandsDir, program } from './rmm/util/cli';
+import { cacheDir, CommandFile, commandsDir, program } from './rmm/util/cli';
 import { UnloadedCommand } from './rmm/types/commands';
 import { mkdirSync, readdirSync } from 'fs'
 import yml from 'yaml';
@@ -6,12 +6,12 @@ import path from 'path';
 import chalk from 'chalk';
 import { version } from './rmm/util/version';
 import { unhandledError } from './rmm/util/error';
-import { PackageJson } from './rmm/classes/PackageJson';
 import { RecipleYml } from './rmm/classes/RecipleYml';
 import { RecipleModulesYml } from './rmm/classes/RecipleModulesYml';
 import { Registry } from './rmm/classes/Registry';
 
 mkdirSync(commandsDir, { recursive: true });
+mkdirSync(cacheDir, { recursive: true })
 
 const unloadedCommands: UnloadedCommand[] = [];
 const commandFiles = readdirSync(commandsDir).filter(f => f.endsWith('.js')).map(f => path.join(commandsDir, f));
@@ -44,7 +44,7 @@ console.log(chalk.bold(`Reciple module manager v${version}`));
         }
     }
 
-    program.parse();
+    await program.parseAsync();
 })();
 
 process.on('uncaughtException', (err: Error) => unhandledError(err));

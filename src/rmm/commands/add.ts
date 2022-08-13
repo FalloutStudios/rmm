@@ -11,13 +11,18 @@ export default (data: CommandFileParam) => program
     .description("install modules")
     .aliases(["install", "i"])
     .action(async (args, e, command: Command) => {
-        const queries = command.args.map(q => resolveModuleQuery(q));
         const registry = new Registry();
 
         console.log(`Fetching registry...`);
         await registry.fetch();
 
-        for (const query of queries) {
-            console.log(query);
+        const modules = await Promise.all(command.args.map(async query => {
+            const q = resolveModuleQuery(query);
+            
+            return await FetchGitHub.fetch(q.module, q.repository, q.tag);
+        }));
+
+        for (const mod of modules) {
+            console.log(mod.cacheAsset());
         }
     });

@@ -28,10 +28,7 @@ export class Registry extends BaseFileReader<IRegistry> {
         const data = typeof name == 'string' ? this.data.repositories.find(r => r.name == name) : name;
         if (!data) return null;
 
-        const repository: IRepository = await axios({
-            url: data.url,
-            method: 'GET'
-        })
+        const repository: IRepository = await axios.get(data.url + `?${Date.now()}`)
         .then(res => res.data as IRepository);
 
         return repository;
