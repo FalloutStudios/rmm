@@ -9,9 +9,6 @@ import { unhandledError } from './rmm/util/error';
 import { RecipleYml } from './rmm/classes/RecipleYml';
 import { RecipleModulesYml } from './rmm/classes/RecipleModulesYml';
 import { Registry } from './rmm/classes/Registry';
-import semver from 'semver';
-
-console.log(semver.satisfies('5.0.0', '^5.0.0'));
 
 mkdirSync(commandsDir, { recursive: true });
 mkdirSync(cacheDir, { recursive: true })
