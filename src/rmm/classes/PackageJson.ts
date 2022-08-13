@@ -7,9 +7,12 @@ import chalk from 'chalk';
 
 export class PackageJson extends BaseFileReader<IPackageJson> {
     public filePath: string = opts.packageJson ?? path.join(cwd, 'package.json');
+    public data: IPackageJson;
 
     constructor(options?: BaseFileReaderOptions) {
         super(options);
+
+        this.data = JSON.parse(this.read());
     }
 
     public read(): string {

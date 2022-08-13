@@ -1,10 +1,11 @@
 import chalk from 'chalk';
 import { Command } from 'commander';
 import { input } from 'fallout-utility';
-import { existsSync, mkdirSync, readdirSync, renameSync, rmSync } from 'fs';
+import { existsSync, fstat, mkdirSync, readdirSync, renameSync, rmSync, writeFileSync } from 'fs';
 import path from 'path';
 import semver from 'semver';
 import { FetchGitHub } from '../classes/FetchGitHub';
+import { PackageJson } from '../classes/PackageJson';
 import { RecipleModulesYml } from '../classes/RecipleModulesYml';
 import { Registry } from '../classes/Registry';
 import { CommandFileParam } from '../types/commands';
@@ -22,6 +23,9 @@ export default (data: CommandFileParam) => program
     .action(async (args, e, command: Command) => {
         const registry = new Registry();
         const recipleModulesYml = new RecipleModulesYml();
+        const packageJson = new PackageJson();
+
+        let modifiedPackageJson = false;
 
         const registrySpinner = createSpinner('Fetching registry...');
         const modulesSpinner = createSpinner('Resolving modules...');
@@ -108,12 +112,30 @@ export default (data: CommandFileParam) => program
                 renameSync(path.join(res.tempDir, file), path.join(folder, file));
             }
 
-            installSpinner.info(`Installed ${chalk.blue(modData.name)}`);
+            for (const dependency of Object.keys(modData.dependencies ?? {})) {
+                if (packageJson.data.dependencies!["dependency"]) {
+                    installSpinner.warn(`A different version of ${chalk.blue(dependency)} dependent by ${chalk.blue(modData.name)} was already installed`);
+                } else {
+                    packageJson.data.dependencies = packageJson.data.dependencies ?? {};
+                    packageJson.data.dependencies[dependency] = modData.dependencies![dependency];
+
+                    modifiedPackageJson = true;
+                }
+            }
+
             installSpinner.stop();
 
             await runScript(modData.scripts ?? {}, 'installed');
             installSpinner.start();
+            installSpinner.info(`Installed ${chalk.blue(modData.name)}`);
         }
 
+        if (modifiedPackageJson) {
+            installSpinner.warn(`${chalk.blue(`package.json`)} was modified. Install new dependencies using your package manager`);
+
+            writeFileSync(path.join(path.dirname(packageJson.filePath), 'package.json.old'), packageJson.read());
+            writeFileSync(packageJson.filePath, JSON.stringify(packageJson.data, null, 2));
+        }
+        
         installSpinner.succeed(`Modules installed successfuly!`);
     });
