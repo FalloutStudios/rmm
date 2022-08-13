@@ -22,7 +22,7 @@ export interface IRecipleYml {
     version: string;
 }
 
-export interface IDotReciple {
+export interface IDotRecipleYml {
     name: string;
     version: string;
     files: string[];
@@ -35,7 +35,7 @@ export interface IDotReciple {
 }
 
 export interface IRecipleModulesYml {
-    modules: (IDotReciple & { repositoryURL: string; containingFolder: string; tag: version; })[];
+    modules: (IDotRecipleYml & { repositoryURL: string; containingFolder: string; tag: version; })[];
 }
 
 export interface IRegistry {

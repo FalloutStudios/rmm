@@ -1,9 +1,9 @@
 import { BaseFileReader, BaseFileReaderOptions } from './base/BaseFileReader';
-import { IDotReciple, IRecipleModulesYml, IRepository } from '../types/files';
+import { IDotRecipleYml, IRecipleModulesYml } from '../types/files';
 import { cwd } from '../util/cli';
 import path from 'path';
 import yml from 'yaml';
-import { DotReciple } from './DotReciple';
+import { DotRecipleYml } from './DotRecipleYml';
 import { RestOrArray } from '../types/commands';
 import { normalizeArray } from '../util/converters';
 import chalk from 'chalk';
@@ -25,9 +25,10 @@ export class RecipleModulesYml extends BaseFileReader<IRecipleModulesYml> {
     public add(module: IRecipleModulesYml["modules"][0]): IRecipleModulesYml["modules"];
     public add(...modules: RestOrArray<IRecipleModulesYml["modules"][0]>): IRecipleModulesYml["modules"] {
         modules = normalizeArray(modules);
-        modules.forEach(mod => DotReciple.validateDotReciple(mod));
+        modules.forEach(mod => DotRecipleYml.validateDotReciple(mod));
 
         for (const mod of modules) {
+            this.data.modules = this.data.modules.filter(m => m.name !== mod.name);
             this.data.modules.push(mod);
         }
 
@@ -36,10 +37,10 @@ export class RecipleModulesYml extends BaseFileReader<IRecipleModulesYml> {
     }
 
     public remove(name: string): IRecipleModulesYml["modules"];
-    public remove(module: IDotReciple): IRecipleModulesYml["modules"];
+    public remove(module: IDotRecipleYml): IRecipleModulesYml["modules"];
     public remove(...names: RestOrArray<string>): IRecipleModulesYml["modules"];
-    public remove(...modules: RestOrArray<IDotReciple>): IRecipleModulesYml["modules"];
-    public remove(...modules: RestOrArray<IDotReciple|string>): IRecipleModulesYml["modules"] {
+    public remove(...modules: RestOrArray<IDotRecipleYml>): IRecipleModulesYml["modules"];
+    public remove(...modules: RestOrArray<IDotRecipleYml|string>): IRecipleModulesYml["modules"] {
         const names: string[] = normalizeArray(modules).map(m => typeof m !== 'string' ? m.name : m);
 
         names.forEach(name => {
