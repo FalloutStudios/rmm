@@ -14,9 +14,11 @@
     "build:publish-prerelease": "yarn run build && yarn npm publish --tag pre"
   },
   "dependencies": {
+    "@octokit/rest": "^19.0.3",
     "axios": "^0.27.2",
     "chalk": "^4.1.2",
     "commander": "^9.4.0",
+    "fallout-utility": "^1.4.6",
     "semver": "^7.3.7",
     "strip-ansi": "6.0.1",
     "yaml": "^2.1.1"

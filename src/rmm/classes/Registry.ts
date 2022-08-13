@@ -56,6 +56,15 @@ export class Registry extends BaseFileReader<IRegistry> {
         return repositories;
     }
 
+    public async findModule(name: string, repository?: string): Promise<string|null> {
+        if (!this.repositories.length) await this.fetch();
+
+        const repo = this.repositories.find(r => typeof r.data[name] == 'string' && (repository && r.name === repository || !repository));
+        if (!repo) return null;
+
+        return repo["data"][name] ?? null;
+    }
+
     public addRepository(data: Omit<IRegistry["repositories"][0], 'createdAt'>): this {
         if (!data.name || !/^[\w-]{1,32}$/.test(data.name)) throw new TypeError("Invalid repository name");
         if (!data.url) throw new TypeError("Repository URL is undefined");

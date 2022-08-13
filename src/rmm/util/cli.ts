@@ -14,6 +14,7 @@ export const program = new Command()
 export const cwd = process.cwd();
 export const rmmDir = path.join(__dirname, '../');
 export const commandsDir = path.join(rmmDir, 'commands');
+export const cacheDir = path.join(rmmDir, 'cache');
 export const opts = program.parse().opts();
 
 export type CommandFile = (data: CommandFileParam) => Awaitable<Command>;

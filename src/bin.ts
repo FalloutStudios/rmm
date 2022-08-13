@@ -31,7 +31,7 @@ console.log(chalk.bold(`Reciple module manager v${version}`));
             await Promise.resolve(command({
                 unloadedCommands,
                 commandFiles,
-                registry: new Registry().data,
+                registry: new Registry(),
                 packageJson: recipleYml.packageJson,
                 recipleYml: recipleYml.recipleYml,
                 recipleModulesYml
