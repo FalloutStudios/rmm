@@ -129,3 +129,5 @@ dist
 # bin
 bin
 test
+cache
+registry.json
