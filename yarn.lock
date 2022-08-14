@@ -40,6 +40,34 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@falloutstudios/rmm@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@falloutstudios/rmm@workspace:."
+  dependencies:
+    "@octokit/rest": ^19.0.3
+    "@types/adm-zip": ^0.5.0
+    "@types/node": ^18.7.2
+    "@types/semver": ^7.3.12
+    adm-zip: ^0.5.9
+    axios: ^0.27.2
+    boolean: ^3.2.0
+    chalk: ^4.1.2
+    cli-spinners: ^2.7.0
+    commander: ^9.4.0
+    discord.js: ^14.2.0
+    fallout-utility: ^1.4.6
+    ora: 5.4.1
+    reciple: ^5.1.1
+    rimraf: ^3.0.2
+    semver: ^7.3.7
+    strip-ansi: 6.0.1
+    typescript: ^4.7.4
+    yaml: ^2.1.1
+  bin:
+    rmm: bin/bin.js
+  languageName: unknown
+  linkType: soft
+
 "@octokit/auth-token@npm:^3.0.0":
   version: 3.0.0
   resolution: "@octokit/auth-token@npm:3.0.0"
@@ -794,34 +822,6 @@ __metadata:
   checksum: 87f4164e396f0171b0a3386cc1877a817f572148ee13a7e113b238e48e8a9f2f31d009a92ec38a591ff1567d9662c6b67fd8818a2dbbaed74bc26a87a2a4a9a0
   languageName: node
   linkType: hard
-
-"rmm@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "rmm@workspace:."
-  dependencies:
-    "@octokit/rest": ^19.0.3
-    "@types/adm-zip": ^0.5.0
-    "@types/node": ^18.7.2
-    "@types/semver": ^7.3.12
-    adm-zip: ^0.5.9
-    axios: ^0.27.2
-    boolean: ^3.2.0
-    chalk: ^4.1.2
-    cli-spinners: ^2.7.0
-    commander: ^9.4.0
-    discord.js: ^14.2.0
-    fallout-utility: ^1.4.6
-    ora: 5.4.1
-    reciple: ^5.1.1
-    rimraf: ^3.0.2
-    semver: ^7.3.7
-    strip-ansi: 6.0.1
-    typescript: ^4.7.4
-    yaml: ^2.1.1
-  bin:
-    rmm: bin/bin.js
-  languageName: unknown
-  linkType: soft
 
 "safe-buffer@npm:~5.2.0":
   version: 5.2.1

@@ -1,5 +1,5 @@
 {
-  "name": "rmm",
+  "name": "@falloutstudios/rmm",
   "version": "3.0.0",
   "description": "Reciple module manager",
   "main": "index.js",
@@ -15,8 +15,8 @@
   "scripts": {
     "clean": "yarn exec rimraf bin",
     "build": "yarn run clean && yarn exec tsc",
-    "build:publish": "yarn run build && yarn npm publish",
-    "build:publish-prerelease": "yarn run build && yarn npm publish --tag pre"
+    "build:publish": "yarn run build && yarn npm publish --scope public",
+    "build:publish-prerelease": "yarn run build && yarn npm publish --tag pre --scope public"
   },
   "dependencies": {
     "@octokit/rest": "^19.0.3",
