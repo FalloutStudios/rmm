@@ -7,6 +7,11 @@
   "author": "FalloutStudios",
   "license": "GPL-3.0",
   "bin": "bin/bin.js",
+  "files": [
+    "bin",
+    "LICENSE",
+    "README.md"
+  ],
   "scripts": {
     "clean": "yarn exec rimraf bin",
     "build": "yarn run clean && yarn exec tsc",
