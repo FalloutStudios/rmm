@@ -90,7 +90,7 @@ export default (data: CommandFileParam) => program
                 ...res.dotRecipleYml,
                 containingFolder: folder,
                 repositoryURL: `https://github.com/${mod.owner}/${mod.repository}/`,
-                tag: mod.tag
+                tag: mod.data?.tag_name ?? mod.tag
             };
 
             installSpinner.text = `Installing: ${chalk.blue(modData.name)}`;

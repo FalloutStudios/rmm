@@ -6,12 +6,12 @@ import { DotRecipleYml } from '../classes/DotRecipleYml';
 import { IDotRecipleYml } from '../types/files';
 import chalk from 'chalk';
 
-export interface validatedZip {
+export interface ValidatedZip {
     dotRecipleYml: IDotRecipleYml;
     tempDir: string;
 }
 
-export async function validateZip(filePath: string): Promise<validatedZip> {
+export async function validateZip(filePath: string): Promise<ValidatedZip> {
     if (!filePath || !existsSync(filePath)) throw new TypeError('Zip file does not exists');
 
     const zip = new AdmZip(filePath, { readEntries: true });
@@ -46,7 +46,7 @@ export async function validateZip(filePath: string): Promise<validatedZip> {
         throw new Error("Zip is empty");
     }
 
-    const data: validatedZip = {
+    const data: ValidatedZip = {
         tempDir,
         dotRecipleYml
     };

@@ -32,7 +32,7 @@ export function resolveModuleQuery(query: string): StringModuleQuery|GitHubModul
     const repository = ((name?.split(':').length ?? 0) > 1 ? name?.split(':')[0] : undefined) || undefined;
     
     if (!name) throw new TypeError("Module name must be specified");
-    if (tag && !semver.valid(tag)) throw new TypeError("Invalid module version");
+    if (tag) throw new TypeError("Invalid module tag");
 
     return {
         type: 'string',
