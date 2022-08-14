@@ -4,7 +4,7 @@ import { CommandFileParam } from '../types/commands';
 import { IDotRecipleYml } from '../types/files';
 import { cwd, program } from '../util/cli';
 import semver from 'semver';
-import { existsSync, mkdirSync, rmSync, writeFileSync } from 'fs';
+import { existsSync, lstatSync, mkdirSync, rmSync, writeFileSync } from 'fs';
 import path from 'path';
 import chalk from 'chalk';
 import yml from 'yaml';
@@ -13,11 +13,12 @@ import { boolean } from 'boolean';
 export default (data: CommandFileParam) => program
     .command('init [location]')
     .description('Create .reciple.yml file')
-    .option('--remove-old-file', 'Remove existing .reciple.yml')
+    .option('--remove-old-file <boolean>', 'Remove existing .reciple.yml')
     .action((args, i, command: Command) => {
-        const location = command.args[0] ?? path.join(cwd, '.reciple.yml');
+        let location = command.args[0] ?? path.join(cwd, '.reciple.yml');
 
         if (!command.opts().removeOldFile && existsSync(location)) throw new Error(`${chalk.blue('.reciple.yml')} already exists`);
+        if (existsSync(location) && lstatSync(location).isDirectory()) location = path.join(location, '.reciple.yml');
 
         const dotReciple: IDotRecipleYml = {
             name: (() => {
@@ -43,7 +44,7 @@ export default (data: CommandFileParam) => program
             supportedRecipleVersions: (() => {
                 const _ : string[] = String(input({ repeatIfEmpty: false, text: "supported reciple versions [separated by comma \",\"]: " }))
                     .split(",")
-                    .filter(v => semver.valid(v));
+                    .filter(v => semver.valid(semver.coerce(v)));
 
                 return _;
             })(),

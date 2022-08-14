@@ -1,15 +1,32 @@
 import { BaseFileReader, BaseFileReaderOptions } from './base/BaseFileReader';
 import { IDotRecipleYml } from '../types/files';
 import { cwd } from '../util/cli';
+import yml from 'yaml';
 import path from 'path';
 import semver from 'semver';
 import { toArray } from '../util/converters';
+import { existsSync } from 'fs';
+import chalk from 'chalk';
 
 export class DotRecipleYml extends BaseFileReader<IDotRecipleYml> {
-    public filePath: string = path.join(cwd, 'reciple.yml');
+    public filePath: string = path.join(cwd, '.reciple.yml');
+    public data: IDotRecipleYml;
 
     constructor(options?: BaseFileReaderOptions) {
         super(options);
+
+        this.filePath =  options?.filePath ?? this.filePath;
+        this.data = yml.parse(this.read());
+    }
+
+    public update(): void {
+        this.save(yml.stringify(this.data));
+    }
+
+    public read(): string {
+        if (!existsSync(this.filePath)) throw new Error(`${chalk.blue('.reciple.yml')} does not exists`);
+
+        return super.read();
     }
 
     public static validateDotReciple(data: any): null {
