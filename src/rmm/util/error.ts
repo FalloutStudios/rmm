@@ -8,7 +8,7 @@ export function unhandledError (error: Error) {const file = path.join(cwd, 'rmm-
     let data = existsSync(file) ? readFileSync(file, 'utf-8') : '';
 
     console.error(`\n${chalk.bold.red(error.name)}: ${error.message}`);
-    console.log(chalk.gray(`Logged to ${chalk.blue('rmm-err.log:'+ (data.split('\n').length + 3))}`));
+    console.log(chalk.gray(`Error log saved in ${chalk.blue('rmm-err.log:'+ (data.length > 1 ? (data.split('\n').length + 3) : 1))}`));
 
     if (!data) mkdirSync(path.dirname(file), { recursive: true });
 
