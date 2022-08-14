@@ -320,6 +320,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"boolean@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "boolean@npm:3.2.0"
+  checksum: fb29535b8bf710ef45279677a86d14f5185d604557204abd2ca5fa3fb2a5c80e04d695c8dbf13ab269991977a79bb6c04b048220a6b2a3849853faa94f4a7d77
+  languageName: node
+  linkType: hard
+
 "brace-expansion@npm:^1.1.7":
   version: 1.1.11
   resolution: "brace-expansion@npm:1.1.11"
@@ -798,6 +805,7 @@ __metadata:
     "@types/semver": ^7.3.12
     adm-zip: ^0.5.9
     axios: ^0.27.2
+    boolean: ^3.2.0
     chalk: ^4.1.2
     cli-spinners: ^2.7.0
     commander: ^9.4.0
