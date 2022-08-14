@@ -1,14 +1,12 @@
+#!/usr/bin/env node
+
 import { cacheDir, CommandFile, commandsDir, program } from './rmm/util/cli';
 import { UnloadedCommand } from './rmm/types/commands';
 import { mkdirSync, readdirSync } from 'fs'
-import yml from 'yaml';
 import path from 'path';
 import chalk from 'chalk';
 import { version } from './rmm/util/version';
 import { unhandledError } from './rmm/util/error';
-import { RecipleYml } from './rmm/classes/RecipleYml';
-import { RecipleModulesYml } from './rmm/classes/RecipleModulesYml';
-import { Registry } from './rmm/classes/Registry';
 
 mkdirSync(commandsDir, { recursive: true });
 mkdirSync(cacheDir, { recursive: true })
