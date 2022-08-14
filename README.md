@@ -9,13 +9,13 @@ Reciple module manager `rmm` is a tool for managing and Reciple modules.
 To install rmm run
 
 ```bash
-npm i -g rmm
+npm i -g @falloutstudios/rmm
 ```
 
 You can also install rmm locally
 
 ```
-npm i --save-dev rmm
+npm i --save-dev @falloutstudios/rmm
 ```
 
 ## Usage

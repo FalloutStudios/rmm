@@ -1,12 +1,14 @@
 {
   "name": "@falloutstudios/rmm",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Reciple module manager",
   "main": "index.js",
   "repository": "https://github.com/FalloutStudios/rmm.git",
   "author": "FalloutStudios",
   "license": "GPL-3.0",
-  "bin": "bin/bin.js",
+  "bin": {
+    "rmm": "bin/bin.js"
+  },
   "files": [
     "bin",
     "LICENSE",
