@@ -53,7 +53,7 @@ export default (data: CommandFileParam) => program
         console.log('\n' + dotRecipleYml.trim() + '\n');
 
         const confirm = boolean(input({ repeatIfEmpty: false, text: "Is this OK? (yes)" }) || 'no');
-        if (!confirm) return;
+        if (!confirm) return console.log("Aborted.");
 
         rmSync(location, { recursive: true, force: true });
         mkdirSync(path.dirname(location), { recursive: true });
