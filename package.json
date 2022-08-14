@@ -15,8 +15,8 @@
   "scripts": {
     "clean": "yarn exec rimraf bin",
     "build": "yarn run clean && yarn exec tsc",
-    "build:publish": "yarn run build && yarn npm publish --scope public",
-    "build:publish-prerelease": "yarn run build && yarn npm publish --tag pre --scope public"
+    "build:publish": "yarn run build && yarn npm publish --access public",
+    "build:publish-prerelease": "yarn run build && yarn npm publish --tag pre --access public"
   },
   "dependencies": {
     "@octokit/rest": "^19.0.3",
