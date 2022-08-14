@@ -14,10 +14,6 @@ export interface UnloadedCommand {
 export interface CommandFileParam {
     unloadedCommands: UnloadedCommand[];
     commandFiles: string[];
-    registry: Registry;
-    packageJson: IPackageJson;
-    recipleYml: IRecipleYml;
-    recipleModulesYml: IRecipleModulesYml;
 }
 
 export interface StringModuleQuery {

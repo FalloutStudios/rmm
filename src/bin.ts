@@ -19,9 +19,6 @@ const commandFiles = readdirSync(commandsDir).filter(f => f.endsWith('.js')).map
 console.log(chalk.bold(`Reciple module manager v${version}`));
 
 (async () => {
-    const recipleYml = new RecipleYml();
-    const recipleModulesYml = yml.parse(new RecipleModulesYml().read());
-
     for (const commandFile of commandFiles) {
         try {
             const commandInit = require(commandFile);
@@ -30,11 +27,7 @@ console.log(chalk.bold(`Reciple module manager v${version}`));
 
             await Promise.resolve(command({
                 unloadedCommands,
-                commandFiles,
-                registry: new Registry(),
-                packageJson: recipleYml.packageJson,
-                recipleYml: recipleYml.recipleYml,
-                recipleModulesYml
+                commandFiles
             })).catch(err => { throw err; });
         } catch (err) {
             unloadedCommands.push({

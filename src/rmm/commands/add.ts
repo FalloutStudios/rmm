@@ -7,6 +7,7 @@ import semver from 'semver';
 import { FetchGitHub } from '../classes/FetchGitHub';
 import { PackageJson } from '../classes/PackageJson';
 import { RecipleModulesYml } from '../classes/RecipleModulesYml';
+import { RecipleYml } from '../classes/RecipleYml';
 import { Registry } from '../classes/Registry';
 import { CommandFileParam } from '../types/commands';
 import { IRecipleModulesYml } from '../types/files';
@@ -22,6 +23,7 @@ export default (data: CommandFileParam) => program
     .aliases(["install", "i"])
     .action(async (args, e, command: Command) => {
         const registry = new Registry();
+        const recipleYml = new RecipleYml();
         const recipleModulesYml = new RecipleModulesYml();
         const packageJson = new PackageJson();
 
@@ -39,7 +41,7 @@ export default (data: CommandFileParam) => program
         modulesSpinner.start();
         modulesSpinner.info(`${command.args.join(', ')}`);
         
-        const additional = (data.recipleModulesYml.modules ?? []).filter(m => !existsSync(m.containingFolder) || m.files.every(f => !existsSync(path.join(m.containingFolder, f))));
+        const additional = (recipleModulesYml.data.modules ?? []).filter(m => !existsSync(m.containingFolder) || m.files.every(f => !existsSync(path.join(m.containingFolder, f))));
         const modules = await Promise.all([...command.args, ...additional].map(async query => {
             const q = resolveModuleQuery(typeof query !== 'string' ? `${query.repositoryURL}@${query.tag}` : query);
 
@@ -65,18 +67,18 @@ export default (data: CommandFileParam) => program
 
         modulesSpinner.succeed(`Cached ${modules.length} module(s)`);
 
-        if (toArray(data.recipleYml.modulesFolder).length > 1) {
+        if (toArray(recipleYml.recipleYml.modulesFolder).length > 1) {
             console.log(`Choose module installation folder.`);
-            console.log(toArray(data.recipleYml.modulesFolder).map((v, i) => `${v}: ${chalk.dim('[') + chalk.blue(`${i}`) + chalk.dim(']')}`).join('\n'));
+            console.log(toArray(recipleYml.recipleYml.modulesFolder).map((v, i) => `${v}: ${chalk.dim('[') + chalk.blue(`${i}`) + chalk.dim(']')}`).join('\n'));
         }
 
-        const containingFolder = toArray(data.recipleYml.modulesFolder)[(toArray(data.recipleYml.modulesFolder).length > 1 ? Number(input('folder index: ')) || 0 : 0)];
+        const containingFolder = toArray(recipleYml.recipleYml.modulesFolder)[(toArray(recipleYml.recipleYml.modulesFolder).length > 1 ? Number(input('folder index: ')) || 0 : 0)];
         if (!containingFolder) throw new Error('Invalid containing folder');
         
         installSpinner.start();
         for (const mod of modules) {
             const cachePath = path.join(cacheDir, mod.filename!);
-            const existingData = data.recipleModulesYml.modules.find(m => m.name === mod.name || m.repositoryURL.includes(`github.com/${mod.owner}/${mod.repository}`));
+            const existingData = recipleModulesYml.data.modules.find(m => m.name === mod.name || m.repositoryURL.includes(`github.com/${mod.owner}/${mod.repository}`));
             const isUpdate = !!existingData ?? additional.some(m => m.name === mod.name || m.repositoryURL.includes(`github.com/${mod.owner}/${mod.repository}`));
             const folder = (isUpdate ? existingData?.containingFolder : containingFolder) ?? containingFolder;
 
@@ -93,7 +95,7 @@ export default (data: CommandFileParam) => program
 
             installSpinner.text = `Installing: ${chalk.blue(modData.name)}`;
 
-            if (!toArray(modData.supportedRecipleVersions).some(v => semver.satisfies(`${semver.coerce(data.recipleYml.version)}`, v))) throw new Error(`${chalk.blue(modData.name)} does not support ${chalk.blue('reciple') + chalk.dim('@') + chalk.green(String(semver.coerce(data.recipleYml.version)))}`);
+            if (!toArray(modData.supportedRecipleVersions).some(v => semver.satisfies(`${semver.coerce(recipleYml.recipleYml.version)}`, v))) throw new Error(`${chalk.blue(modData.name)} does not support ${chalk.blue('reciple') + chalk.dim('@') + chalk.green(String(semver.coerce(recipleYml.recipleYml.version)))}`);
             if ((!isUpdate && existingData) && semver.satisfies(modData.version, `<${existingData.version}`)) throw new Error(`Newer version of ${chalk.blue(modData.name)} already exists. Remove the current version before installing older version of this module`);
             if (!isUpdate && !existingData) {
                 const conflictingFiles = modData.files.map(f => path.join(folder, f)).filter(f => existsSync(f));
