@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import { Command } from 'commander';
 import { input } from 'fallout-utility';
-import { existsSync, fstat, mkdirSync, readdirSync, renameSync, rmSync, writeFileSync } from 'fs';
+import { existsSync, mkdirSync, readdirSync, renameSync, rmSync, writeFileSync } from 'fs';
 import path from 'path';
 import semver from 'semver';
 import { FetchGitHub } from '../classes/FetchGitHub';
@@ -38,30 +38,30 @@ export default (data: CommandFileParam) => program
         await registry.fetch();
         registrySpinner.succeed("Fetched registry!");
         
-        modulesSpinner.start();
         modulesSpinner.info(`${command.args.join(', ')}`);
-        
+        modulesSpinner.start();
+
         const additional = (recipleModulesYml.data.modules ?? []).filter(m => !existsSync(m.containingFolder) || m.files.every(f => !existsSync(path.join(m.containingFolder, f))));
         const modules = await Promise.all([...command.args, ...additional].map(async query => {
             const q = resolveModuleQuery(typeof query !== 'string' ? `${query.repositoryURL}@${query.tag}` : query);
 
             if (q.type == 'github') {
-                const fetch = new FetchGitHub(`https://github.com/${q.owner}/${q.repository}/`, q.tag);
+                const github = new FetchGitHub(`https://github.com/${q.owner}/${q.repository}/`, q.tag);
 
                 modulesSpinner.text = `Resolving ${chalk.dim('github:') + chalk.blue(q.owner + '/' + q.repository) + chalk.dim('@') + chalk.green(q.tag)}...`;
-                await fetch.fetch();
+                await github.fetch();
 
-                const asset = await fetch.cacheAsset();
+                const cachedAsset = await github.cacheAsset();
 
-                modulesSpinner.info(`Cached ${chalk.dim('github:') + chalk.blue(q.owner + '/' + q.repository) + chalk.dim('@') + chalk.green(q.tag)}: ${chalk.dim(asset)}`);
-                return fetch;
+                createSpinner().info(`Cached ${chalk.dim('github:') + chalk.blue(q.owner + '/' + q.repository) + chalk.dim('@') + chalk.green(q.tag)}: ${chalk.dim(cachedAsset)}`);
+                return github;
             }
             
             modulesSpinner.text = `Resolving ${q.repository ? chalk.dim(q.repository) + chalk.dim(':') : ''}${chalk.blue(q.module) + chalk.dim('@') + chalk.green(q.tag)}...`;
 
             const fetch = await FetchGitHub.fetch(q.module, q.repository, q.tag);
             const asset = await fetch.cacheAsset();
-            modulesSpinner.info(`Cached ${q.repository ? chalk.dim(q.repository) + chalk.dim(':') : ''}${chalk.blue(q.module) + chalk.dim('@') + chalk.green(q.tag)}: ${chalk.dim(asset)}`);
+            createSpinner().info(`Cached ${q.repository ? chalk.dim(q.repository) + chalk.dim(':') : ''}${chalk.blue(q.module) + chalk.dim('@') + chalk.green(q.tag)}: ${chalk.dim(asset)}`);
             return fetch;
         }));
 
@@ -72,7 +72,8 @@ export default (data: CommandFileParam) => program
             console.log(toArray(recipleYml.recipleYml.modulesFolder).map((v, i) => `${v}: ${chalk.dim('[') + chalk.blue(`${i}`) + chalk.dim(']')}`).join('\n'));
         }
 
-        const containingFolder = toArray(recipleYml.recipleYml.modulesFolder)[(toArray(recipleYml.recipleYml.modulesFolder).length > 1 ? Number(input('folder index: ')) || 0 : 0)];
+        const inputContainingFolder: string = String((toArray(recipleYml.recipleYml.modulesFolder).length > 1 ? Number(input('folder index: ')) : 0) || 0);
+        const containingFolder = toArray(recipleYml.recipleYml.modulesFolder).find((f, i) => inputContainingFolder == f || Number(inputContainingFolder) == i);
         if (!containingFolder) throw new Error('Invalid containing folder');
         
         installSpinner.start();
@@ -116,7 +117,7 @@ export default (data: CommandFileParam) => program
 
             for (const dependency of Object.keys(modData.dependencies ?? {})) {
                 if (packageJson.data.dependencies!["dependency"]) {
-                    installSpinner.warn(`A different version of ${chalk.blue(dependency)} dependent by ${chalk.blue(modData.name)} was already installed`);
+                    createSpinner().warn(`A different version of ${chalk.blue(dependency)} dependent by ${chalk.blue(modData.name)} was already installed`);
                 } else {
                     packageJson.data.dependencies = packageJson.data.dependencies ?? {};
                     packageJson.data.dependencies[dependency] = modData.dependencies![dependency];
@@ -129,11 +130,11 @@ export default (data: CommandFileParam) => program
 
             await runScript(modData.scripts ?? {}, 'installed');
             installSpinner.start();
-            installSpinner.info(`Installed ${chalk.blue(modData.name)}`);
+            createSpinner().info(`Installed ${chalk.blue(modData.name)}`);
         }
 
         if (modifiedPackageJson) {
-            installSpinner.warn(`${chalk.blue(`package.json`)} was modified. Install new dependencies using your package manager`);
+            createSpinner().warn(`${chalk.blue(`package.json`)} was modified. Install new dependencies using your package manager`);
 
             writeFileSync(path.join(path.dirname(packageJson.filePath), 'package.json.old'), packageJson.read());
             writeFileSync(packageJson.filePath, JSON.stringify(packageJson.data, null, 2));
