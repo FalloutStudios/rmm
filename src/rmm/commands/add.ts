@@ -65,10 +65,10 @@ export default (data: CommandFileParam) => program
             const fetch = await FetchGitHub.fetch(q.module, q.repository, q.tag);
             const asset = await fetch.cacheAsset();
 
-            modulesSpinner.start();
-            createSpinner().info(`Cached ${q.repository ? chalk.dim(q.repository) + chalk.dim(':') : ''}${chalk.blue(q.module) + chalk.dim('@') + chalk.green(q.tag)}: ${chalk.dim(asset)}`);
             modulesSpinner.stop();
-
+            createSpinner().info(`Cached ${q.repository ? chalk.dim(q.repository) + chalk.dim(':') : ''}${chalk.blue(q.module) + chalk.dim('@') + chalk.green(q.tag)}: ${chalk.dim(asset)}`);
+            modulesSpinner.start();
+            
             return fetch;
         }));
 
