@@ -34,6 +34,7 @@ export default (data: CommandFileParam) => program
                 if (!existsSync(file)) continue;
 
                 rmSync(file, { recursive: true, force: true });
+                removeSpinner.text = `Removed ${chalk.green(file)}`;
             }
 
             recipleModulesYml.remove(mod);

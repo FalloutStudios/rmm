@@ -46,10 +46,12 @@ export default (data: CommandFileParam) => program
                 zip.addLocalFile(file);
             }
 
+            spinner.stop();
             createSpinner().info(`Added ${chalk.blue(file)}`);
+            spinner.start();
         }
 
-        spinner.text = `Creating output...`;
+        spinner.text = `Creating output file...`;
 
         rmSync(outFile, { force: true, recursive: true });
         zip.writeZip(outFile);

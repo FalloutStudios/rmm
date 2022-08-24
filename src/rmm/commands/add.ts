@@ -53,7 +53,10 @@ export default (data: CommandFileParam) => program
 
                 const cachedAsset = await github.cacheAsset();
 
+                modulesSpinner.stop();
                 createSpinner().info(`Cached ${chalk.dim('github:') + chalk.blue(q.owner + '/' + q.repository) + chalk.dim('@') + chalk.green(q.tag)}: ${chalk.dim(cachedAsset)}`);
+                modulesSpinner.start();
+
                 return github;
             }
             
@@ -61,7 +64,11 @@ export default (data: CommandFileParam) => program
 
             const fetch = await FetchGitHub.fetch(q.module, q.repository, q.tag);
             const asset = await fetch.cacheAsset();
+
+            modulesSpinner.start();
             createSpinner().info(`Cached ${q.repository ? chalk.dim(q.repository) + chalk.dim(':') : ''}${chalk.blue(q.module) + chalk.dim('@') + chalk.green(q.tag)}: ${chalk.dim(asset)}`);
+            modulesSpinner.stop();
+
             return fetch;
         }));
 
@@ -129,8 +136,8 @@ export default (data: CommandFileParam) => program
             installSpinner.stop();
 
             await runScript(modData.scripts ?? {}, 'installed');
+            installSpinner.info(`Installed ${chalk.blue(modData.name)}`);
             installSpinner.start();
-            createSpinner().info(`Installed ${chalk.blue(modData.name)}`);
         }
 
         if (modifiedPackageJson) {
