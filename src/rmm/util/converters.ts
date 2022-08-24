@@ -1,5 +1,4 @@
 import { escapeRegExp, trimChars } from 'fallout-utility';
-import semver from 'semver';
 import { GitHubModuleQuery, RestOrArray, StringModuleQuery, version } from '../types/commands';
 
 export function toArray<T> (data: T|T[]): T[] {

@@ -68,7 +68,7 @@ export default (data: CommandFileParam) => program
             modulesSpinner.stop();
             createSpinner().info(`Cached ${q.repository ? chalk.dim(q.repository) + chalk.dim(':') : ''}${chalk.blue(q.module) + chalk.dim('@') + chalk.green(q.tag)}: ${chalk.dim(asset)}`);
             modulesSpinner.start();
-            
+
             return fetch;
         }));
 
@@ -93,7 +93,7 @@ export default (data: CommandFileParam) => program
             mkdirSync(folder, { recursive: true });
 
             installSpinner.text = `Extracting: ${chalk.blue(cachePath)}`;
-            const res = await validateZip(cachePath);
+            const res = await validateZip(cachePath, mod);
             const modData: IRecipleModulesYml["modules"][0] = {
                 ...res.dotRecipleYml,
                 containingFolder: folder,
@@ -123,8 +123,10 @@ export default (data: CommandFileParam) => program
             }
 
             for (const dependency of Object.keys(modData.dependencies ?? {})) {
-                if (packageJson.data.dependencies!["dependency"]) {
+                if (Object.keys(packageJson.data.dependencies ?? {}).includes(dependency)) {
+                    installSpinner.stop();
                     createSpinner().warn(`A different version of ${chalk.blue(dependency)} dependent by ${chalk.blue(modData.name)} was already installed`);
+                    installSpinner.start();
                 } else {
                     packageJson.data.dependencies = packageJson.data.dependencies ?? {};
                     packageJson.data.dependencies[dependency] = modData.dependencies![dependency];

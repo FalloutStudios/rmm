@@ -12,7 +12,7 @@ export default (data: CommandFileParam) => program
     .aliases(["cc"])
     .action(() => {
         const spinner = createSpinner(`Clearing cache from ${chalk.dim(cacheDir)}`);
-        const files = readdirSync(cacheDir).filter(f => lstatSync(f).isDirectory());
+        const files = readdirSync(cacheDir).filter(f => lstatSync(path.join(cacheDir, f)).isDirectory());
 
         spinner.text = `Deleting cache from ${chalk.blue(files.length)} modules author(s)`;
         spinner.stop();
