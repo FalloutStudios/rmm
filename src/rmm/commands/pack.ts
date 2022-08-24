@@ -46,7 +46,7 @@ export default (data: CommandFileParam) => program
                 zip.addLocalFile(file);
             }
 
-            spinner.info(`Added ${chalk.blue(file)}`);
+            createSpinner().info(`Added ${chalk.blue(file)}`);
         }
 
         spinner.text = `Creating output...`;

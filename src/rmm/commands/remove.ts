@@ -26,8 +26,7 @@ export default (data: CommandFileParam) => program
         });
 
         for (const mod of modules) {
-            const removeSpinner = createSpinner(`Removing ${chalk.blue(mod.name) + chalk.dim('@') + chalk.green(mod.version)}...`);
-            removeSpinner.start();
+            const removeSpinner = createSpinner(`Removing ${chalk.blue(mod.name) + chalk.dim('@') + chalk.green(mod.version)}...`).start();
 
             const files = mod.files.map(p => path.join(mod.containingFolder, p));
 
