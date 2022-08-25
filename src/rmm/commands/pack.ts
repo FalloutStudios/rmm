@@ -37,13 +37,13 @@ export default (data: CommandFileParam) => program
         
         zip.addLocalFile(path.join(moduleDir, '.reciple.yml'));
 
-        for (const file of dotRecipleYml.files.map(f => path.join(moduleDir, f))) {
+        for (const file of dotRecipleYml.files) {
             spinner.text = `Adding ${chalk.blue(file)}`;
 
-            if (lstatSync(file).isDirectory()) {
-                zip.addLocalFolder(file, path.join(file, '../'));
+            if (lstatSync(path.join(moduleDir, file)).isDirectory()) {
+                zip.addLocalFolder(path.join(moduleDir, file), file);
             } else {
-                zip.addLocalFile(file);
+                zip.addLocalFile(path.join(moduleDir, file));
             }
 
             spinner.stop();
