@@ -41,7 +41,7 @@ export default (data: CommandFileParam) => program
             spinner.text = `Adding ${chalk.blue(file)}`;
 
             if (lstatSync(file).isDirectory()) {
-                zip.addLocalFolder(file);
+                zip.addLocalFolder(file, path.join('.', file));
             } else {
                 zip.addLocalFile(file);
             }
