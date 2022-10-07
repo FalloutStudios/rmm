@@ -18,6 +18,7 @@ export interface IPackageJson {
 
 export interface IRecipleYml {
     token: string;
+    disableVersionCheck?: boolean;
     modulesFolder: string|string[];
     version: string;
 }

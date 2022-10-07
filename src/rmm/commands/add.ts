@@ -82,7 +82,7 @@ export default (data: CommandFileParam) => program
         const inputContainingFolder: string = String((toArray(recipleYml.recipleYml.modulesFolder).length > 1 ? Number(input('folder index: ')) : 0) || 0);
         const containingFolder = toArray(recipleYml.recipleYml.modulesFolder).find((f, i) => inputContainingFolder == f || Number(inputContainingFolder) == i);
         if (!containingFolder) throw new Error('Invalid containing folder');
-        
+
         installSpinner.start();
         for (const mod of modules) {
             const cachePath = path.join(cacheDir, mod.filename!);
@@ -103,7 +103,7 @@ export default (data: CommandFileParam) => program
 
             installSpinner.text = `Installing: ${chalk.blue(modData.name)}`;
 
-            if (!toArray(modData.supportedRecipleVersions).some(v => semver.satisfies(`${semver.coerce(recipleYml.recipleYml.version)}`, v))) throw new Error(`${chalk.blue(modData.name)} does not support ${chalk.blue('reciple') + chalk.dim('@') + chalk.green(String(semver.coerce(recipleYml.recipleYml.version)))}`);
+            if (!recipleYml.recipleYml.disableVersionCheck && !toArray(modData.supportedRecipleVersions).some(v => semver.satisfies(`${semver.coerce(recipleYml.recipleYml.version)}`, v))) throw new Error(`${chalk.blue(modData.name)} does not support ${chalk.blue('reciple') + chalk.dim('@') + chalk.green(String(semver.coerce(recipleYml.recipleYml.version)))}`);
             if ((!isUpdate && existingData) && semver.satisfies(modData.version, `<${existingData.version}`)) throw new Error(`Newer version of ${chalk.blue(modData.name)} already exists. Remove the current version before installing older version of this module`);
             if (!isUpdate && !existingData) {
                 const conflictingFiles = modData.files.map(f => path.join(folder, f)).filter(f => existsSync(f));
@@ -117,7 +117,7 @@ export default (data: CommandFileParam) => program
             recipleModulesYml.add(modData);
 
             const files = readdirSync(res.tempDir).filter(f => modData.files.some(i => i == f));
-            
+
             for (const file of files) {
                 renameSync(path.join(res.tempDir, file), path.join(folder, file));
             }
@@ -143,11 +143,13 @@ export default (data: CommandFileParam) => program
         }
 
         if (modifiedPackageJson) {
+            installSpinner.stop();
             createSpinner().warn(`${chalk.blue(`package.json`)} was modified. Install new dependencies using your package manager`);
+            installSpinner.start();
 
             writeFileSync(path.join(path.dirname(packageJson.filePath), 'package.json.old'), packageJson.read());
             writeFileSync(packageJson.filePath, JSON.stringify(packageJson.data, null, 2));
         }
-        
+
         installSpinner.succeed(`Modules installed successfuly!`);
     });
